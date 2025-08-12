@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Loan Calculator — Calculate EMI, Interest & Total Payable Amount</title>
+  <meta name="description" content="Use our free loan calculator to find your monthly EMI, total interest payable, and total amount for any loan. Perfect for home, personal, car loans." />
+  <link rel="canonical" href="https://easycalczone.com/index.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Loan Calculator — Calculate EMI & Interest" />
+  <meta property="og:description" content="Calculate your monthly loan payments, interest, and total payable amount instantly with our free loan calculator." />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Structured data FAQ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How does the loan calculator work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Enter your loan amount, interest rate, and tenure to calculate your monthly EMI, total interest payable, and total payment amount."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is this calculator accurate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, it uses the standard EMI formula used by banks and financial institutions."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root{--bg:#f5f7fa;--card:#fff;--muted:#555;--accent:#4f46e5;}
+    html,body{margin:0;padding:0;font-family:Arial,sans-serif;background:var(--bg);color:#333;}
+    .container{max-width:900px;margin:2rem auto;padding:2rem;background:var(--card);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+    h1{color:var(--accent);margin-bottom:0.5rem;}
+    label{display:block;margin-top:1rem;font-weight:600;color:var(--muted);}
+    input[type=number]{width:100%;padding:10px;margin-top:0.5rem;border:1px solid #ccc;border-radius:4px;font-size:1rem;}
+    button{margin-top:1.5rem;background:var(--accent);color:#fff;border:none;padding:12px 24px;border-radius:6px;font-size:1rem;cursor:pointer;}
+    button:hover{background:#3c37d6;}
+    .result{margin-top:2rem;padding:1rem;background:#e0e7ff;border-radius:6px;font-weight:bold;}
+    nav a {margin-right: 1rem; text-decoration:none; color:var(--accent); font-weight:600;}
+    nav a:hover {text-decoration:underline;}
+    footer{margin-top:3rem;text-align:center;color:#777;font-size:0.9rem;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <a href="index.html">Loan Calculator</a>
+      <a href="age-calculator.html">Age Calculator</a>
+      <a href="bmi-calculator.html">BMI Calculator</a>
+      <a href="pregnancy-calculator.html">Pregnancy Calculator</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+
+    <h1>Loan Calculator</h1>
+    <p>Calculate your monthly EMI, total interest payable, and total loan payment quickly and easily.</p>
+
+    <form id="loanForm" onsubmit="return false;">
+      <label for="principal">Loan Amount (₹ or $)</label>
+      <input type="number" id="principal" name="principal" min="1" step="any" placeholder="e.g. 100000" required />
+
+      <label for="rate">Annual Interest Rate (%)</label>
+      <input type="number" id="rate" name="rate" min="0.1" step="0.01" placeholder="e.g. 7.5" required />
+
+      <label for="tenure">Loan Tenure (Months)</label>
+      <input type="number" id="tenure" name="tenure" min="1" placeholder="e.g. 60" required />
+
+      <button id="calculateBtn">Calculate EMI</button>
+    </form>
+
+    <div class="result" id="result" aria-live="polite" style="display:none;"></div>
+
+    <footer>
+      <small><a href="privacy.html" style="color:var(--accent); text-decoration:none;">Privacy Policy</a> • <a href="contact.html" style="color:var(--accent); text-decoration:none;">Contact</a></small>
+    </footer>
+  </div>
+
+  <script>
+    function calculateEMI(principal, annualRate, tenureMonths) {
+      const monthlyRate = annualRate / 12 / 100;
+      const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, tenureMonths)) / (Math.pow(1 + monthlyRate, tenureMonths) - 1);
+      return emi;
+    }
+
+    document.getElementById('calculateBtn').addEventListener('click', () => {
+      const principal = parseFloat(document.getElementById('principal').value);
+      const rate = parseFloat(document.getElementById('rate').value);
+      const tenure = parseInt(document.getElementById('tenure').value);
+
+      if (isNaN(principal) || principal <= 0) { alert('Enter a valid loan amount'); return; }
+      if (isNaN(rate) || rate <= 0) { alert('Enter a valid interest rate'); return; }
+      if (isNaN(tenure) || tenure <= 0) { alert('Enter a valid loan tenure'); return; }
+
+      const emi = calculateEMI(principal, rate, tenure);
+      const totalPayment = emi * tenure;
+      const totalInterest = totalPayment - principal;
+
+      const resultDiv = document.getElementById('result');
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = `
+        Monthly EMI: <strong>${emi.toFixed(2)}</strong><br/>
+        Total Interest Payable: <strong>${totalInterest.toFixed(2)}</strong><br/>
+        Total Payment (Principal + Interest): <strong>${totalPayment.toFixed(2)}</strong>
+      `;
+    });
+  </script>
+</body>
+</html>

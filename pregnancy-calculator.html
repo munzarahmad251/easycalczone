@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pregnancy Calculator — Due Date & Pregnancy Week Calculator</title>
+  <meta name="description" content="Calculate your pregnancy due date and current week based on your last menstrual period. Easy and accurate pregnancy calculator." />
+  <link rel="canonical" href="https://easycalczone.com/pregnancy-calculator.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Pregnancy Calculator — Due Date & Pregnancy Week" />
+  <meta property="og:description" content="Calculate pregnancy due date and weeks from last menstrual period with this free pregnancy calculator." />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <style>
+    :root{--bg:#f5f7fa;--card:#fff;--muted:#555;--accent:#4f46e5;}
+    html,body{margin:0;padding:0;font-family:Arial,sans-serif;background:var(--bg);color:#333;}
+    .container{max-width:900px;margin:2rem auto;padding:2rem;background:var(--card);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+    h1{color:var(--accent);margin-bottom:0.5rem;}
+    label{display:block;margin-top:1rem;font-weight:600;color:var(--muted);}
+    input[type=date]{width:100%;padding:10px;margin-top:0.5rem;border:1px solid #ccc;border-radius:4px;font-size:1rem;}
+    button{margin-top:1.5rem;background:var(--accent);color:#fff;border:none;padding:12px 24px;border-radius:6px;font-size:1rem;cursor:pointer;}
+    button:hover{background:#3c37d6;}
+    .result{margin-top:2rem;padding:1rem;background:#e0e7ff;border-radius:6px;font-weight:bold;}
+    nav a {margin-right: 1rem; text-decoration:none; color:var(--accent); font-weight:600;}
+    nav a:hover {text-decoration:underline;}
+    footer{margin-top:3rem;text-align:center;color:#777;font-size:0.9rem;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <a href="index.html">Loan Calculator</a>
+      <a href="age-calculator.html">Age Calculator</a>
+      <a href="bmi-calculator.html">BMI Calculator</a>
+      <a href="pregnancy-calculator.html">Pregnancy Calculator</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+
+    <h1>Pregnancy Calculator</h1>
+    <p>Calculate your estimated due date and current pregnancy week based on your last menstrual period (LMP).</p>
+
+    <form id="pregnancyForm" onsubmit="return false;">
+      <label for="lmp">First day of Last Menstrual Period (LMP)</label>
+      <input type="date" id="lmp" name="lmp" required />
+
+      <button id="calculateBtn">Calculate Due Date</button>
+    </form>
+
+    <div class="result" id="result" aria-live="polite" style="display:none;"></div>
+
+    <footer>
+      <small><a href="privacy.html" style="color:var(--accent); text-decoration:none;">Privacy Policy</a> • <a href="contact.html" style="color:var(--accent); text-decoration:none;">Contact</a></small>
+    </footer>
+  </div>
+
+  <script>
+    function calculatePregnancy(lmpDate) {
+      const msInDay = 24 * 60 * 60 * 1000;
+      const today = new Date();
+      const lmp = new Date(lmpDate + 'T00:00:00');
+      if (lmp > today) return null;
+
+      const diffDays = Math.floor((today - lmp) / msInDay);
+      const weeksPregnant = Math.floor(diffDays / 7);
+      const daysPregnant = diffDays % 7;
+
+      const dueDate = new Date(lmp.getTime() + 280 * msInDay); // 40 weeks = 280 days
+
+      return {
+        dueDate,
+        weeksPregnant,
+        daysPregnant,
+      };
+    }
+
+    document.getElementById('calculateBtn').addEventListener('click', () => {
+      const lmpInput = document.getElementById('lmp').value;
+      if (!lmpInput) { alert('Please select your last menstrual period date'); return; }
+      const resultDiv = document.getElementById('result');
+      const data = calculatePregnancy(lmpInput);
+
+      if (!data) {
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = '<strong>Error:</strong> Last menstrual period date cannot be in the future.';
+        return;
+      }
+
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = `
+        Estimated Due Date: <strong>${data.dueDate.toDateString()}</strong><br/>
+        Current Pregnancy: <strong>${data.weeksPregnant} weeks and ${data.daysPregnant} days</strong>
+      `;
+    });
+  </script>
+</body>
+</html>
